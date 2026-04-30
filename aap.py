@@ -21,7 +21,7 @@ input_df = input_df.fillna(0)
 if st.button("Predict"):
     result = model.predict(input_df)
 
-    if result[0] == 1:
+   if result[0] == 1:
         st.error("Customer will leave ❌")
     else:
         st.success("Customer will stay ✅")
