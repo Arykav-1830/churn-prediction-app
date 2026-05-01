@@ -1,29 +1,41 @@
 import streamlit as st
 import pickle
 import pandas as pd
-import numpy as np
-
 
 model = pickle.load(open('model.pkl', 'rb'))
 
 st.title("Customer Churn Prediction")
 
 
-feature1 = st.number_input("Enter Feature 1", value=0.0)
-feature2 = st.number_input("Enter Feature 2", value=0.0)
+age = st.number_input("Enter Age", value=30)
+
+income = st.selectbox("Income Class", ["Low Income", "High Income"])
 
 if st.button("Predict"):
   
-    input_data = pd.DataFrame(
-        [[feature1, feature2]], 
-        columns=['Column1', 'Column2'] 
-    )
-    
-    try:
-        
-        result = model.predict(input_data)
-        
+    expected_columns = [
+        'AccountSyncedToSocialMedia_No', 
+        'AccountSyncedToSocialMedia_Yes', 
+        'Age', 
+        'AnnualIncomeClass_High Income', 
+        'AnnualIncomeClass_Low Income'
        
+    ]
+    
+
+    input_df = pd.DataFrame(0, index=[0], columns=expected_columns)
+    
+   
+    input_df['Age'] = age
+    if income == "High Income":
+        input_df['AnnualIncomeClass_High Income'] = 1
+    else:
+        input_df['AnnualIncomeClass_Low Income'] = 1
+        
+    try:
+      
+        result = model.predict(input_df)
+        
         if result[0] == 1:
             st.error("Customer will leave ❌")
         else:
